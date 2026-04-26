@@ -1,0 +1,60 @@
+body {
+  margin: 0;
+  background: black;
+}
+
+/* BACKGROUND */
+.bg-layer {
+  position: fixed;
+  inset: -2px;
+ background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+
+  transform: translateZ(0) scale(1);
+  will-change: transform, opacity;
+
+  backface-visibility: hidden;
+
+  opacity: 0;
+  z-index: 0; 
+}
+
+/* CONTENT */
+.content {
+  position: relative;
+  z-index: 2;
+}
+
+/* HEADER */
+.hdr {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  justify-content: space-between;
+
+  padding: 20px;
+
+  color: white;
+
+  z-index: 9999; /* 👈 всегда сверху */
+
+  box-sizing: border-box;
+}
+.hdr__menu{
+  display: flex;
+  gap: 10px;
+}
+
+/* SECTIONS */
+.section {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 80px;
+
+  color: white;
+}
