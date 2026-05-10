@@ -1,104 +1,106 @@
 import { useEffect, useRef } from "react";
-import './App.css'
-const images = ["/b1.jpg", "/b2.jpg", "/b1.jpg"]
-export default function ScrolBackground() {
-  const a = useRef(null);
-  const b = useRef(null);
-  const ticking = useRef(false);
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger.js";
+import "./App.css";
 
+gsap.registerPlugin(ScrollTrigger);
+
+ScrollTrigger.config({
+  ignoreMobileResize: true,
+  autoRefreshEvents: "visibilitychange,DOMContentLoaded"
+});
+
+export default function ScrollBackground({ slides }) {
+  const ref = useRef(null);
+ // 🔥 WOODNEST FIX: фиксируем высоту ОДИН РАЗ
+      const baseHeight = window.innerHeight;
   useEffect(() => {
-    const ZOOM_PART = 0.7; // part from zoom to fade 
+    const ctx = gsap.context(() => {
 
-    const setBg = (el, src) => {
-      if (el) el.style.backgroundImage = `url(${src})`;
-    };
+      const sections = gsap.utils.toArray(".bg-slide");
 
-    const onScroll = () => {
-      if (ticking.current) return;
+     
 
-      //reduce lags
-      requestAnimationFrame(() => {
-        const vh = window.innerHeight;
-        const scroll = window.scrollY;
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: document.body,
+          start: "top top",
 
-        
-        const section = Math.floor(scroll / vh);
-        const progress = (scroll % vh) / vh;
+          // ❗ ключевая фиксация — НЕ visualViewport
+          end: `+=${slides.length * baseHeight}`,
 
-        console.log(`vh ${vh}; scroll ${scroll}; section ${section}; progress ${progress.toFixed(3)}`)
-        const currentIndex = Math.min(section, images.length - 1);
-        const nextIndex = Math.min(section + 1, images.length - 1);
+          scrub: 1,
 
-        const layerA = a.current;
-        const layerB = b.current;
-
-        if (!layerA || !layerB) return;
-
-        // 📌 ставим изображения
-        setBg(layerA, images[currentIndex]);
-        setBg(layerB, images[nextIndex]);
-
-        // =========================
-        // 1. ZOOM ФАЗА
-        // =========================
-        if (progress < ZOOM_PART) {
-          const t = progress / ZOOM_PART; // 0 → 1
-
-          const zoom = 1 + t * 0.03;
-
-          layerA.style.opacity = 1;
-          layerB.style.opacity = 0;
-
-          layerA.style.transform = `scale(${zoom})`;
-          layerB.style.transform = `scale(${zoom})`;
+          // 🔥 важно для mobile stability
+          invalidateOnRefresh: false,
+          anticipatePin: 1,
         }
-
-        // =========================
-        // 2. CROSSFADE ФАЗА
-        // =========================
-        else {
-          const t = (progress - ZOOM_PART) / (1 - ZOOM_PART); // 0 → 1
-
-          const zoom = 1.03; // фиксируем зум
-
-          layerA.style.transform = `scale(${zoom})`;
-          layerB.style.transform = `scale(1)`;
-
-          layerA.style.opacity = 1 - t;
-          layerB.style.opacity = t;
-        }
-
-        ticking.current = false;
       });
 
-      ticking.current = true;
-    };
+      sections.forEach((el, i) => {
+        const img = el.querySelector("img");
 
-    window.addEventListener("scroll", onScroll);
-    onScroll();
+        // =========================
+        // ZOOM
+        // =========================
+        tl.to(img, {
+          scale: slides[i].zoom,
+          ease: "none"
+        }, i);
 
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+        // =========================
+        // CROSSFADE
+        // =========================
+        if (sections[i + 1]) {
+          const nextImg = sections[i + 1].querySelector("img");
+
+          tl.to(img, {
+            opacity: 0,
+            ease: "none"
+          }, i + 0.6);
+
+          tl.to(nextImg, {
+            opacity: 1,
+            ease: "none"
+          }, i + 0.6);
+        }
+      });
+
+    }, ref);
+
+    let isGesture = false;
+  let lastVH = window.innerHeight;
+
+  const lockViewport = () => {
+    const vh = window.visualViewport?.height || window.innerHeight;
+
+    if (Math.abs(vh - lastVH) > 80) {
+      isGesture = true;
+
+      setTimeout(() => {
+        isGesture = false;
+      }, 250);
+    }
+
+    lastVH = vh;
+  };
+
+  window.visualViewport?.addEventListener("resize", lockViewport);
+
+  return () => {
+    ctx.revert();
+    window.visualViewport?.removeEventListener("resize", lockViewport);
+  };
+
+}, [slides]);
 
   return (
-    <>
-      <div ref={a} className="bg-layer" />
-      <div ref={b} className="bg-layer" />
-      <div className="content">
-          <section className="section">
-            <h1>Сцена 1</h1>
-            <p>Контент</p>
-          </section>
-          <section className="section">
-            <h1>Сцена 2</h1>
-            <p>Контент</p>
-          </section>
-          <section className="section">
-            <h1>Сцена 3</h1>
-            <p>Контент</p>
-          </section>
-      </div>
-      <div style={{ height: `${images.length * 100}vh` }}/>
-    </>
+    <div ref={ref} className="bg-engine">
+      {slides.map((s, i) => (
+        <div key={i} className="bg-slide">
+          <img src={s.image} alt="" />
+        </div>
+      ))}
+    </div>
   );
 }

@@ -1,24 +1,27 @@
-import { useEffect, useRef } from "react";
-import './App.css'
-import ScrolBackground from "./ScollBackground";
-const images = ["/b1.jpg", "/b2.jpg", "/b1.jpg"]
+import b1 from "/b1.jpg";
+import b2 from "/b2.jpg";
+import b3 from "/b1.jpg";
+import b4 from "/b2.jpg";
+import "./App.css";
+import Content from "./Content";
+import Header from "./Headr";
+import ScrollBackground from "./ScollBackground";
+import { useEffect } from "react";
+import useViewport from "./useViewport";
+const slides = [
+  { image: b1, zoom: 1.07 },
+  { image: b2, zoom: 1.05 },
+  { image: b3, zoom: 1.02 },
+  { image: b4, zoom: 1.02 },
+];
+
 export default function App() {
-  
+ useViewport()
   return (
-     <>
-      <ScrolBackground />
-
-       
-        <header className="hdr">
-          <div className="hdr__logo">KOROPOVO</div>
-
-          <div className="hdr__menu">
-            <div className="hdr__button">Зарезервувати</div>
-            <div>Меню</div>
-          </div>
-        </header>
-
-       
+    <>
+      <ScrollBackground slides={slides} />
+      <Header />
+      <Content />
     </>
   );
 }
