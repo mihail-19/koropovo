@@ -7,7 +7,6 @@ import Content from "./Content";
 import Header from "./Headr";
 import ScrollBackground from "./ScollBackground";
 import { useEffect } from "react";
-import useViewport from "./useViewport";
 const slides = [
   { image: b1, zoom: 1.07 },
   { image: b2, zoom: 1.05 },
@@ -16,7 +15,6 @@ const slides = [
 ];
 
 export default function App() {
- useViewport()
   return (
     <>
       <ScrollBackground slides={slides} />

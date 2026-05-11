@@ -1,13 +1,16 @@
+import { useState } from "react";
 import "./App.css";
 
 export default function Content() {
+ 
+
   return (
     <main className="content">
       <section className="block">
-        <h1>Відпочинок у Коропово</h1>
+        <h1>Відпочинок у Коропово </h1>
         <div className="order">
             <div className="order__section">
-                <p>Дата заселення1</p>
+                <p>Дата заселення</p>
                 <p><a href="/">Додати</a></p>
             </div>
               <div className="order__section">

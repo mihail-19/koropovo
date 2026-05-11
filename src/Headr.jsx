@@ -4,6 +4,7 @@ export default function Header() {
     <header className="hdr">
       <div>KOROPOVO</div>
       <div>Menu</div>
+           
     </header>
   );
 }
