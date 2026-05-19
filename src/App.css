@@ -8,7 +8,7 @@ html, body {
   top: -10vh;
   left: 0;
   width: 100%;
-  height: 120vh; /* 👈 больше экрана */
+  height: 120vh; 
 
   z-index: -1;
   overflow: hidden;
@@ -55,8 +55,62 @@ html, body {
   box-sizing: border-box;
 }
 
+.header__menu-icon {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+
+  background-color: rgb(184, 184, 114);
+
+  -webkit-mask-image: url('/menu.png');
+  mask-image: url('/menu.png');
+
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
+  -webkit-mask-position: center;
+  mask-position: center;
+
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
 
 
+.header__menu-body{
+  position: absolute;
+  background-color: rgb(20, 31, 12);
+  opacity: 0.98;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  left: 0;
+  top:0;
+}
+
+.header__menu-close {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+
+  background-color: rgb(240, 240, 231);
+
+  -webkit-mask-image: url('/close.png');
+  mask-image: url('/close.png');
+
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
+  -webkit-mask-position: center;
+  mask-position: center;
+
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+.header__menu-top{
+  display: flex;
+  justify-content: flex-end;
+  padding: 30px;
+}
 
 
 
