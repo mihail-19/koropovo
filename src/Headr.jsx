@@ -8,16 +8,17 @@ export default function Header() {
   return (
     <header className="hdr">
       <div>KOROPOVO</div>
-      <div className="header__menu-icon" onClick={() => setShowMenu(true)}></div>
-      {showMenu && (
-        <div className="header__menu-body">
+      <div className={`header__menu-icon-container ${showMenu ? "active" : ""}`} onClick={() => setShowMenu(!showMenu)}>
+            <div className="icon-face front"></div>
+            <div className="icon-face back"></div>
+    </div>
+     
+        <div className={ showMenu ? "header__menu-body_active" : "header__menu-body"}>
 
-          <div className="header__menu-top">
-            <div className="header__menu-close" onClick={() => setShowMenu(false)}></div>
-          </div>
+          
 
         </div>
-      )}
+      
       
            
     </header>
